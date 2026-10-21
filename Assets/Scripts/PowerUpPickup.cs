@@ -1,36 +1,57 @@
 using UnityEngine;
- 
-// A speed boost pickup. When the player touches it, it gives the boost,
-// plays a sound and particles, hides, and comes back a few seconds later.
+
+public enum PowerUpType { Speed, Jump, ScoreBoost }
+
+[RequireComponent(typeof(AudioSource))]
 public class PowerUpPickup : MonoBehaviour
 {
-    [SerializeField] private float duration = 10f;    // boost length
-    [SerializeField] private float respawnDelay = 5f; // time hidden
-    [SerializeField] private GameObject visuals;      // child to hide
+    [SerializeField] private PowerUpType powerUpType;
+    [SerializeField] private float duration = 5f;
+    [SerializeField] private float respawnDelay = 30f;
+    [SerializeField] private GameObject visuals;      
     [SerializeField] private AudioClip pickupSound;
-    [SerializeField] private GameObject pickupEffect; // particle prefab
+    [SerializeField] private GameObject pickupEffect; 
  
     private void OnTriggerEnter(Collider other)
     {
-        // Only the player has a PlayerPowerUps component
         PlayerPowerUps powerUps = other.GetComponent<PlayerPowerUps>();
         if (powerUps == null) return;
  
-        powerUps.ActivateSpeedBoost(duration);
+        // Switch on the Inspector enum so each item triggers its correct method
+        switch (powerUpType)
+        {
+            case PowerUpType.Speed:
+                powerUps.ActivateSpeedBoost(duration);
+                break;
+            case PowerUpType.Jump:
+                powerUps.ActivateJumpBoost(duration);
+                break;
+            case PowerUpType.ScoreBoost:
+                powerUps.ActivateScoreBoost(duration);
+                break;
+        }
  
-        // Sound and particles
-        GetComponent<AudioSource>().PlayOneShot(pickupSound);
-        Instantiate(pickupEffect, transform.position, Quaternion.identity);
+        if (pickupSound != null)
+        {
+            GetComponent<AudioSource>().PlayOneShot(pickupSound);
+        }
+        
+        if (pickupEffect != null)
+        {
+            Instantiate(pickupEffect, transform.position, Quaternion.identity);
+        }
  
-        // Disappear, and call Reappear() after respawnDelay seconds
-        visuals.SetActive(false);
-        GetComponent<Collider>().enabled = false;
+        if (visuals != null) visuals.SetActive(false);
+        Collider col = GetComponent<Collider>();
+        if (col != null) col.enabled = false;
+        
         Invoke(nameof(Reappear), respawnDelay);
     }
  
     private void Reappear()
     {
-        visuals.SetActive(true);
-        GetComponent<Collider>().enabled = true;
+        if (visuals != null) visuals.SetActive(true);
+        Collider col = GetComponent<Collider>();
+        if (col != null) col.enabled = true;
     }
 }

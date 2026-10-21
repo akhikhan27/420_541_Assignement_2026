@@ -1,29 +1,102 @@
 using UnityEngine;
-using TMPro; // TMP_Text
- 
-// Updates the HUD every frame from the ScoreManager and PlayerPowerUps.
+using TMPro;
+
 public class HUDController : MonoBehaviour
 {
-    [Header("Score")]
+    [Header("Score & HP")]
     [SerializeField] private TMP_Text scoreText;
-    [Header("Health")]
     [SerializeField] private TMP_Text hpText;
- 
+
+    [Header("Level Timer")]
+    [SerializeField] private TMP_Text levelTimerText;
+    private float levelElapsedTime = 0f;
+    private bool isTimerRunning = true;
+
+    [Header("Power-Up Timers")]
+    [SerializeField] private TMP_Text speedTimerText;
+    [SerializeField] private TMP_Text jumpTimerText;
+    [SerializeField] private TMP_Text scoreBoostTimerText;
+
     private void Update()
     {
         UpdateScore();
         UpdateHP();
-    }
- 
-    private void UpdateScore()
-    {
-        // The Score property from Lab 4: anyone can read it
-        scoreText.text = "Score: " + ScoreManager.Instance.Score;
+        UpdateLevelTimer();
+        UpdatePowerUpTimers();
     }
 
-    public void UpdateHP()
+    private void UpdateScore()
     {
-        hpText.text = "HP: " + PlayerHealth.Instance.CurrentHealth + "/" + PlayerHealth.Instance.MaxHealth;
+        if (scoreText != null && ScoreManager.Instance != null)
+        {
+            scoreText.text = "Score: " + ScoreManager.Instance.Score;
+        }
     }
- 
+
+    private void UpdateHP()
+    {
+        if (hpText != null && PlayerHealth.Instance != null)
+        {
+            hpText.text = "HP: " + PlayerHealth.Instance.CurrentHealth + "/" + PlayerHealth.Instance.MaxHealth;
+        }
+    }
+
+    private void UpdateLevelTimer()
+    {
+        if (!isTimerRunning || levelTimerText == null) return;
+
+        levelElapsedTime += Time.deltaTime;
+        int minutes = Mathf.FloorToInt(levelElapsedTime / 60f);
+        int seconds = Mathf.FloorToInt(levelElapsedTime % 60f);
+        levelTimerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
+    }
+
+    public void StopTimer() => isTimerRunning = false;
+
+    private void UpdatePowerUpTimers()
+    {
+        if (PlayerPowerUps.Instance == null) return;
+
+        // Speed Timer
+        if (speedTimerText != null)
+        {
+            if (PlayerPowerUps.Instance.SpeedTimeLeft > 0f)
+            {
+                speedTimerText.gameObject.SetActive(true);
+                speedTimerText.text = Mathf.Ceil(PlayerPowerUps.Instance.SpeedTimeLeft) + "s";
+            }
+            else
+            {
+                speedTimerText.gameObject.SetActive(false);
+            }
+        }
+
+        // Jump Timer
+        if (jumpTimerText != null)
+        {
+            if (PlayerPowerUps.Instance.JumpTimeLeft > 0f)
+            {
+                jumpTimerText.gameObject.SetActive(true);
+                jumpTimerText.text = Mathf.Ceil(PlayerPowerUps.Instance.JumpTimeLeft) + "s";
+            }
+            else
+            {
+                jumpTimerText.gameObject.SetActive(false);
+            }
+        }
+
+        // Score Boost Timer
+        if (scoreBoostTimerText != null)
+        {
+            if (PlayerPowerUps.Instance.ScoreBoostTimeLeft > 0f)
+            {
+                scoreBoostTimerText.gameObject.SetActive(true);
+                scoreBoostTimerText.text = Mathf.Ceil(PlayerPowerUps.Instance.ScoreBoostTimeLeft) + "s";
+            }
+            else
+            {
+                scoreBoostTimerText.gameObject.SetActive(false);
+            }
+        }
+    }
 }

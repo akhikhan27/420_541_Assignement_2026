@@ -278,7 +278,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 36cc1f8c4f78e802dbf7d8ef695b0094, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  duration: 10
+  powerUpType: 0
+  duration: 5
   respawnDelay: 5
   visuals: {fileID: 759268186643062560}
   pickupSound: {fileID: 8300000, guid: fa67ae0cd9ef0aa8c94e306394e46cb2, type: 3}
