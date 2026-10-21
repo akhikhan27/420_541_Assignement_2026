@@ -2,13 +2,16 @@ using UnityEngine;
 
 public class TrapTrigger : MonoBehaviour
 {
-    public Transform respawnPoint;
+    [SerializeField] private int damageAmount = 1;
 
     void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {
-            other.transform.position = respawnPoint.position;
+            PlayerHealth health = other.GetComponent<PlayerHealth>();
+            if(health != null){
+                health.TakeDamage(damageAmount);
+            }
         }
     }
 }
