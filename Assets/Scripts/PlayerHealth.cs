@@ -28,11 +28,10 @@ public class PlayerHealth : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
-        // If not enough time has passed since the last hit, take no damage
         if (Time.time < lastDamageTime + invincibilityDuration) return;
 
         CurrentHealth -= damage;
-        lastDamageTime = Time.time; // Reset the invincibility timer
+        lastDamageTime = Time.time; 
         
         if (CurrentHealth <= 0)
         {

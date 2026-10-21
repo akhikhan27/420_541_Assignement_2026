@@ -7,12 +7,10 @@ public class HUDController : MonoBehaviour
     [SerializeField] private TMP_Text scoreText;
     [SerializeField] private TMP_Text hpText;
 
-    [Header("Level Timer")]
     [SerializeField] private TMP_Text levelTimerText;
     private float levelElapsedTime = 0f;
     private bool isTimerRunning = true;
 
-    [Header("Power-Up Timers")]
     [SerializeField] private TMP_Text speedTimerText;
     [SerializeField] private TMP_Text jumpTimerText;
     [SerializeField] private TMP_Text scoreBoostTimerText;
@@ -57,7 +55,6 @@ public class HUDController : MonoBehaviour
     {
         if (PlayerPowerUps.Instance == null) return;
 
-        // Speed Timer
         if (speedTimerText != null)
         {
             if (PlayerPowerUps.Instance.SpeedTimeLeft > 0f)
@@ -71,7 +68,6 @@ public class HUDController : MonoBehaviour
             }
         }
 
-        // Jump Timer
         if (jumpTimerText != null)
         {
             if (PlayerPowerUps.Instance.JumpTimeLeft > 0f)
@@ -85,7 +81,6 @@ public class HUDController : MonoBehaviour
             }
         }
 
-        // Score Boost Timer
         if (scoreBoostTimerText != null)
         {
             if (PlayerPowerUps.Instance.ScoreBoostTimeLeft > 0f)

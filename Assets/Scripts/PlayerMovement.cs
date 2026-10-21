@@ -12,9 +12,8 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float jumpForce = 5f;      // base strength of the jump
     [SerializeField] private float doubleJumpForce = 4f;
 
-    [Header("Charge Jump Settings")]
-    [SerializeField] private float maxChargeBonus = 8f;   // Extra force added at full charge
-    [SerializeField] private float maxChargeTime = 1.0f;  // Seconds it takes to reach full charge
+    [SerializeField] private float maxChargeBonus = 8f;   
+    [SerializeField] private float maxChargeTime = 1.0f;  
     private float currentJumpCharge = 0f;
 
     [Header("Ground Check Settings")]
@@ -72,17 +71,14 @@ public class PlayerMovement : MonoBehaviour
                 turnSpeed * Time.deltaTime);
         }
 
-        // 3. Handle Charge Jump Input
         if (isGrounded)
         {
-            // While holding Space, accumulate charge up to maxChargeTime
             if (Input.GetKey(KeyCode.Space))
             {
                 currentJumpCharge += Time.deltaTime;
                 currentJumpCharge = Mathf.Min(currentJumpCharge, maxChargeTime);
             }
 
-            // When releasing Space, request the jump using the calculated charge proportion
             if (Input.GetKeyUp(KeyCode.Space))
             {
                 jumpRequested = true;
@@ -90,7 +86,6 @@ public class PlayerMovement : MonoBehaviour
         }
         else
         {
-            // Reset charge if we leave the ground without jumping normally
             if (Input.GetKeyUp(KeyCode.Space))
             {
                 currentJumpCharge = 0f;
@@ -104,13 +99,11 @@ public class PlayerMovement : MonoBehaviour
      
         if (jumpRequested)
         {
-            // Calculate total jump force based on how long Space was held
-            float chargeRatio = currentJumpCharge / maxChargeTime; // 0 to 1
+            float chargeRatio = currentJumpCharge / maxChargeTime; 
             float finalJumpForce = jumpForce + (maxChargeBonus * chargeRatio);
 
             Jump(finalJumpForce);
 
-            // Reset charge and request flag
             currentJumpCharge = 0f;
             jumpRequested = false;
         }
@@ -134,10 +127,8 @@ public class PlayerMovement : MonoBehaviour
     {
         float currentSpeed = (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift)) ? runSpeed : walkSpeed;
 
-        // Calculate velocity based on current forward vector
         Vector3 targetVelocity = moveDirection * currentSpeed * SpeedMultiplier;
 
-        // Apply movement while preserving vertical velocity (gravity/jumping)
         rb.linearVelocity = new Vector3(targetVelocity.x, rb.linearVelocity.y, targetVelocity.z);
     }
 

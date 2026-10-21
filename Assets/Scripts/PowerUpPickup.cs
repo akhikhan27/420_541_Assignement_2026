@@ -17,7 +17,6 @@ public class PowerUpPickup : MonoBehaviour
         PlayerPowerUps powerUps = other.GetComponent<PlayerPowerUps>();
         if (powerUps == null) return;
  
-        // Switch on the Inspector enum so each item triggers its correct method
         switch (powerUpType)
         {
             case PowerUpType.Speed:
